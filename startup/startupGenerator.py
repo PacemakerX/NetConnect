@@ -1,6 +1,7 @@
 import platform
 import os
 import sys
+import winreg as reg  # Registry module for Windows
 
 class StartupGenerator:
     def __init__(self, script_path):
@@ -10,37 +11,29 @@ class StartupGenerator:
         os_type = platform.system()
 
         if os_type == "Windows":
-            self.create_windows_startup()
+            self.create_windows_startup_registry()
         elif os_type == "Linux":
             self.create_linux_startup()
         elif os_type == "Darwin":
             self.create_macos_startup()
         else:
-            print(" Unsupported OS for startup automation.")
+            print("Unsupported OS for startup automation.")
             sys.exit(1)
 
-    def create_windows_startup(self):
-        startup_folder = os.path.join(os.environ['APPDATA'], 'Microsoft\\Windows\\Start Menu\\Programs\\Startup')
-        startup_script_path = os.path.join(startup_folder, "WiFiAutoConnect.lnk")
-
+    def create_windows_startup_registry(self):
+        # Registry key to make script run at startup
         try:
-            # Create shortcut for Windows startup
-            import winshell
-            from win32com.client import Dispatch
-
-            shell = Dispatch('WScript.Shell')
-            shortcut = shell.CreateShortcut(startup_script_path)
-            shortcut.TargetPath = sys.executable
-            shortcut.Arguments = f'"{self.script_path}"'
-            shortcut.WorkingDirectory = os.path.dirname(self.script_path)
-            shortcut.save()
-
-            print(f"✅ Windows startup shortcut created at {startup_script_path}.")
+            registry_path = r"Software\Microsoft\Windows\CurrentVersion\Run"
+            registry_key = reg.OpenKey(reg.HKEY_CURRENT_USER, registry_path, 0, reg.KEY_WRITE)
+            reg.SetValueEx(registry_key, "WiFiAutoConnect", 0, reg.REG_SZ, f'"{sys.executable}" "{self.script_path}"')
+            reg.CloseKey(registry_key)
+            print(" Windows registry startup entry created.")
         except Exception as e:
-            print(f"❌ Failed to create Windows startup shortcut: {e}")
+            print(f" Failed to create Windows startup registry entry: {e}")
             sys.exit(1)
 
     def create_linux_startup(self):
+        # Linux startup with `.desktop` file as previously provided
         autostart_folder = os.path.expanduser("~/.config/autostart")
         if not os.path.exists(autostart_folder):
             os.makedirs(autostart_folder)
@@ -50,35 +43,34 @@ class StartupGenerator:
         try:
             with open(desktop_entry_path, "w") as f:
                 f.write(f"""[Desktop Entry]
-Name=WiFiAutoConnect
-Exec=python3 {self.script_path}
-Type=Application
-X-GNOME-Autostart-enabled=true
-            """)
-
-            os.chmod(desktop_entry_path, 0o755)  # Make the file executable
+                    Name=WiFiAutoConnect
+                    Exec=python3 {self.script_path}
+                    Type=Application
+                    X-GNOME-Autostart-enabled=true
+                    """)
+            os.chmod(desktop_entry_path, 0o755)  # Make it executable
             print(f" Linux startup script created at {desktop_entry_path}.")
         except Exception as e:
             print(f" Failed to create Linux startup script: {e}")
             sys.exit(1)
 
     def create_macos_startup(self):
+        # macOS startup using a plist file as previously provided
         try:
-            # Create a plist file for macOS startup
             plist_content = f"""<?xml version="1.0" encoding="UTF-8"?>
-<plist version="1.0">
-  <dict>
-    <key>Label</key>
-    <string>WiFiAutoConnect</string>
-    <key>ProgramArguments</key>
-    <array>
-      <string>python3</string>
-      <string>{self.script_path}</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-  </dict>
-</plist>"""
+            <plist version="1.0">
+            <dict>
+                <key>Label</key>
+                <string>WiFiAutoConnect</string>
+                <key>ProgramArguments</key>
+                <array>
+                <string>python3</string>
+                <string>{self.script_path}</string>
+                </array>
+                <key>RunAtLoad</key>
+                <true/>
+            </dict>
+            </plist>"""
 
             plist_path = os.path.expanduser("~/Library/LaunchAgents/com.wifi.autoconnect.plist")
 
@@ -89,6 +81,7 @@ X-GNOME-Autostart-enabled=true
             os.system(f"launchctl load {plist_path}")
 
             print(f" macOS startup plist created and loaded at {plist_path}.")
+
         except Exception as e:
             print(f" Failed to create macOS startup plist: {e}")
             sys.exit(1)
