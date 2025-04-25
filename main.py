@@ -23,8 +23,8 @@ def main():
 
     # Create startup entry after user setup
     try:
-        startup = StartupGenerator(script_path=__file__)
-        startup.create_startup()
+        startup = StartupGenerator()
+        startup.setup_startup()
     except Exception as e:
         print(f"Error creating startup: {e}")
         sys.exit(1)
