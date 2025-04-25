@@ -7,7 +7,7 @@ class UserManager:
         self.credentials_file.parent.mkdir(parents=True, exist_ok=True)
 
     def create_new_user(self):
-        ssid = input("Enter Wi-Fi SSID: ").strip()
+        ssid = input("Enter Wi-Fi SSID ( NAME OF WIFI e.g G-VIT,LHG-VIT,E-VIT): ").strip()
         username = input("Enter Username: ").strip()
         password = input("Enter Password: ").strip()
 
