@@ -2,6 +2,41 @@ import json
 from pathlib import Path
 
 class UserManager:
+    """UserManager handles user credentials management for WiFi auto-login functionality.
+    This class provides methods to create, edit and manage WiFi login credentials including
+    SSID, username and password. Credentials are stored in JSON format in the user's home
+    directory.
+    Attributes:
+        credentials_file (Path): Path object pointing to the JSON file storing credentials
+            Located at ~/.wifi_auto_login/credentials.json
+    Methods:
+        create_new_user(): 
+            Interactive prompt to create new user credentials.
+            Gets SSID, username and password from user input.
+            Validates that all fields are provided.
+            Saves credentials to JSON file.
+        edit_existing_user():
+            Interactive prompt to edit existing credentials.
+            Shows current SSID and username.
+            Allows editing SSID, username or password.
+            Updates JSON file with new credentials.
+        _save_credentials(data):
+            Internal method to save credentials dict to JSON file.
+            Args:
+                data (dict): Dictionary containing credentials to save
+        _load_credentials():
+            Internal method to load credentials from JSON file.
+            Returns:
+                dict: Dictionary containing stored credentials
+    Raises:
+        FileNotFoundError: If credentials file doesn't exist when trying to load
+        JSONDecodeError: If credentials file contains invalid JSON
+        PermissionError: If there are filesystem permission issues
+    Example:
+        manager = UserManager()
+        manager.create_new_user()  # Create new credentials
+        manager.edit_existing_user()  # Edit existing credentials
+    """
     def __init__(self):
         self.credentials_file = Path.home() / ".wifi_auto_login" / "credentials.json"
         self.credentials_file.parent.mkdir(parents=True, exist_ok=True)
