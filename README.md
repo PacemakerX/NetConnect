@@ -1,5 +1,5 @@
 <img src="./assets/image.png" alt="LinkedIn Automation" style="width:100%; height:300px; object-fit: cover;">
-<br><br>
+<br>
 
 # NetConnect
 
