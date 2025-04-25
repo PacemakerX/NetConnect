@@ -22,11 +22,11 @@ class UserManager:
         }
 
         self._save_credentials(credentials)
-        print("✅ Credentials saved successfully.")
+        print(" Credentials saved successfully.")
 
     def edit_existing_user(self):
         if not self.credentials_file.exists():
-            print("⚠️ No credentials found. Please create a new user first.")
+            print(" No credentials found. Please create a new user first.")
             return
 
         credentials = self._load_credentials()
@@ -49,7 +49,7 @@ class UserManager:
             return self.edit_existing_user()
 
         self._save_credentials(credentials)
-        print("✅ Updated successfully.")
+        print(" Updated successfully.")
 
     def _save_credentials(self, data):
         with open(self.credentials_file, "w") as f:
