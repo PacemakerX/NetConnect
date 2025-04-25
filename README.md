@@ -68,40 +68,11 @@ cd NetConnect
 python main.py
 ```
 
-
-## 🤝 Contributing
-
-We welcome contributions to **NetConnect**! Whether it's fixing bugs, suggesting new features, or improving documentation, your input is highly appreciated.
-
-### How to Contribute
-
-1. **Open an Issue**: Before submitting a pull request (PR), please open an issue to discuss the change you'd like to make. This helps ensure we understand the context and requirements.
-   - To open an issue, navigate to the [Issues](https://github.com/yourusername/NetConnect/issues) tab and click on "New Issue."
-   - Provide a clear description of the problem or feature request, including steps to reproduce (if applicable).
-
-2. **Fork the Repository**: Click the "Fork" button at the top right of this repository and create your own copy of the project.
-
-3. **Make Changes**: Clone your forked repository and make the necessary changes.
-   - Follow the existing code style and conventions.
-   - Write clear commit messages.
-   - If applicable, include tests for your changes.
-
-4. **Create a Pull Request (PR)**: Once your changes are ready, create a pull request to merge them back into the main repository.
-   - Reference the issue your PR is addressing (e.g., "Fixes #123").
-   - Include a description of what was changed and why.
-
-5. **Review and Merge**: We will review your pull request and, if everything looks good, merge it into the main repository.
-
-## Code of Conduct
-We adhere to a **Code of Conduct** in our community. Be respectful, kind, and considerate of others while collaborating.
-
-Thank you for helping improve **NetConnect**!
-
 ## Link to the Repository:
 
 <p align="center">
 <a href="https://github.com/PacemakerX/NetConnect.git">
-  <img src="https://user-images.githubusercontent.com/74038190/212749447-bfb7e725-6987-49d9-ae85-2015e3e7cc41.gif" alt="Website Link" style="width:100%; height:300px; object-fit: cover;">
+  <img src="https://user-images.githubusercontent.com/74038190/212749447-bfb7e725-6987-49d9-ae85-2015e3e7cc41.gif" alt="Website Link" style="width:800px; height:300px; object-fit: cover;">
 </a>
 <p>
 
