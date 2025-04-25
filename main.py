@@ -2,6 +2,7 @@ import os
 import sys
 from menu.menuHandler import MenuHandler
 from utils.platformUtils import clear_screen
+from startup.startupGenerator import StartupGenerator
 from pathlib import Path
 
 # Load splash art from assets
@@ -20,9 +21,17 @@ def main():
     menu = MenuHandler()
     menu.main_menu()
 
+    # Create startup entry after user setup
+    try:
+        startup = StartupGenerator(script_path=__file__)
+        startup.create_startup()
+    except Exception as e:
+        print(f"Error creating startup: {e}")
+        sys.exit(1)
+
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n Aborted by user.")
+        print("\nAborted by user.")
         sys.exit(0)
