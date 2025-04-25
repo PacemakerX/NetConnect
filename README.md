@@ -55,10 +55,6 @@ Before running the project, ensure that the following software is installed:
 
 - **Python 3.7+**: Required for running the automation script.
 
-
-
-## 📋 Installation & Working
-
 ```bash
 # Clone the repository
 git clone https://github.com/PacemakerX/NetConnect.git
