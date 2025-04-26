@@ -271,7 +271,7 @@ class StartupGenerator:
         4. Provides visual feedback during the connection process
 
         Script Features:
-        - JSON credential parsing using jq
+        - JSON credential parsing using Python
         - Network connection using NetworkManager (nmcli)
         - Cursor visibility management for better UI
         - Error handling for credential loading and network operations
@@ -282,7 +282,7 @@ class StartupGenerator:
             ~/.local/share/netconnect/wifi_connect.sh
 
         Required Dependencies:
-            - jq: JSON parser (script checks for its presence)
+            - Python: For JSON parsing (Python 3.x required)
             - nmcli: NetworkManager command line interface
             - curl: For HTTP requests
             - tput: For terminal cursor control
@@ -296,11 +296,10 @@ class StartupGenerator:
 
         Script Flow:
         1. Check for credentials file
-        2. Verify jq installation
-        3. Extract credentials using jq
-        4. Attempt WiFi connection using nmcli
-        5. Perform captive portal authentication if needed
-        6. Display connection status
+        2. Extract credentials using Python (instead of jq)
+        3. Attempt WiFi connection using nmcli
+        4. Perform captive portal authentication if needed
+        5. Display connection status
 
         Raises:
             OSError: If there are permission issues writing the script
@@ -322,19 +321,13 @@ class StartupGenerator:
             exit 1
         fi
 
-        # Parse JSON - requires jq
-        if ! command -v jq &> /dev/null; then
-            echo "Error: jq is required but not installed. Please install jq."
-            exit 1
-        fi
-
-        WIFI_SSID=$(jq -r '.ssid' "$CREDENTIALS_FILE")
-        USERNAME=$(jq -r '.username' "$CREDENTIALS_FILE")
-        PASSWORD=$(jq -r '.password' "$CREDENTIALS_FILE")
+        # Extract credentials using Python (instead of jq)
+        WIFI_SSID=$(python3 -c "import json; f=open('$CREDENTIALS_FILE'); data=json.load(f); print(data['ssid'])")
+        USERNAME=$(python3 -c "import json; f=open('$CREDENTIALS_FILE'); data=json.load(f); print(data['username'])")
+        PASSWORD=$(python3 -c "import json; f=open('$CREDENTIALS_FILE'); data=json.load(f); print(data['password'])")
 
         # URL for login submission
         LOGIN_URL="http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://detectportal.firefox.com/canonical.html"
-
 
         # Connect to Wi-Fi network
         echo "Connecting to Wi-Fi: $WIFI_SSID ..."
@@ -351,73 +344,69 @@ class StartupGenerator:
                 -d "userId=$USERNAME" \\
                 -d "password=$PASSWORD" \\
                 -d "serviceName=ProntoAuthentication" \\
-                -s -o /dev/null 
+                -s -o /dev/null
         } && echo "Connected successfully!" || echo "Failed to connect. Please check your credentials or network."
 
         # Show the cursor again
         tput cnorm
         '''
-        # Write the shell script
+
+        # Write the shell script to the specified path
         with open(self.script_path, 'w') as f:
             f.write(script_content)
-        
-        # Make it executable
+
+        # Make the script executable
         os.chmod(self.script_path, os.stat(self.script_path).st_mode | stat.S_IXUSR | stat.S_IXGRP)
 
-    def _generate_macos_script(self):
+    def _generate_linux_script(self):
         """
-        Generate a bash script for macOS systems to handle automatic WiFi connection and captive portal authentication.
+        Generate a bash script for Linux systems to handle automatic WiFi connection and captive portal authentication.
 
         This method creates a shell script that:
         1. Loads WiFi credentials from a JSON file
-        2. Connects to the specified WiFi network using networksetup
+        2. Connects to the specified WiFi network using nmcli
         3. Handles captive portal authentication
         4. Provides visual feedback during the connection process
 
         Script Features:
-        - JSON credential parsing using jq
-        - Network connection using networksetup (macOS native)
+        - JSON credential parsing using Python
+        - Network connection using NetworkManager (nmcli)
         - Cursor visibility management for better UI
         - Error handling for credential loading and network operations
         - Silent curl operations for portal authentication
         - Progress indication during connection attempts
 
         Script Location:
-            ~/Library/Application Support/NetConnect/wifi_connect.sh
+            ~/.local/share/netconnect/wifi_connect.sh
 
         Required Dependencies:
-        - jq: JSON parser (script checks for its presence)
-        - networksetup: macOS network configuration utility
-        - curl: For HTTP requests
-        - tput: For terminal cursor control
+            - Python: For JSON parsing (Python 3.x required)
+            - nmcli: NetworkManager command line interface
+            - curl: For HTTP requests
+            - tput: For terminal cursor control
 
         Required Credentials Format (JSON):
         {
             "ssid": "WiFi-Network-Name",
-            "username": "Registration Number", 
+            "username": "Registration Number",
             "password": "password123"
         }
 
         Script Flow:
-        1. Hide cursor for cleaner output
-        2. Check for credentials file existence
-        3. Verify jq installation
-        4. Extract credentials using jq
-        5. Attempt WiFi connection using networksetup
-        6. Perform captive portal authentication if needed
-        7. Display connection status
-        8. Restore cursor visibility
+        1. Check for credentials file
+        2. Extract credentials using Python (instead of jq)
+        3. Attempt WiFi connection using nmcli
+        4. Perform captive portal authentication if needed
+        5. Display connection status
 
         Raises:
             OSError: If there are permission issues writing the script
             IOError: If there are issues making the script executable
-            
+
         Note:
             The script is made executable after creation using chmod
-            The script handles macOS-specific network configuration
-            Uses tput for terminal manipulation
         """
-        script_content ='''#!/bin/bash
+        script_content = '''#!/bin/bash
         # WiFi Auto Connect Script for Linux
 
         # Hide the cursor
@@ -430,44 +419,41 @@ class StartupGenerator:
             exit 1
         fi
 
-        # Parse JSON - requires jq
-        if ! command -v jq &> /dev/null; then
-            echo "Error: jq is required but not installed. Please install jq."
-            exit 1
-        fi
+        # Extract credentials using Python (instead of jq)
+        WIFI_SSID=$(python3 -c "import json; f=open('$CREDENTIALS_FILE'); data=json.load(f); print(data['ssid'])")
+        USERNAME=$(python3 -c "import json; f=open('$CREDENTIALS_FILE'); data=json.load(f); print(data['username'])")
+        PASSWORD=$(python3 -c "import json; f=open('$CREDENTIALS_FILE'); data=json.load(f); print(data['password'])")
 
-        WIFI_SSID=$(jq -r '.ssid' "$CREDENTIALS_FILE")
-        USERNAME=$(jq -r '.username' "$CREDENTIALS_FILE")
-        PASSWORD=$(jq -r '.password' "$CREDENTIALS_FILE")
-
-       # URL for login submission
+        # URL for login submission
         LOGIN_URL="http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://detectportal.firefox.com/canonical.html"
 
-        # Connect to the Wi-Fi network
-        echo "Connecting to the Wi-Fi..."
-        networksetup -setairportnetwork "$WIFI_SSID"
+        # Connect to Wi-Fi network
+        echo "Connecting to Wi-Fi: $WIFI_SSID ..."
+        nmcli dev wifi connect "$WIFI_SSID" || {
+            echo "Failed to connect to $WIFI_SSID"
+            tput cnorm  # Show cursor before exit
+            exit 1
+        }
 
-        # Wait a few seconds to ensure the connection is up
-        sleep 5
-
-        # Make the login request
-        echo "Logging in to captive portal..."
+        # Make the login request silently
+        echo "Attempting to log in to captive portal..."
         {
-            curl -X POST "$LOGIN_URL" \
-                -d "userId=$USERNAME" \
-                -d "password=$PASSWORD" \
-                -d "serviceName=ProntoAuthentication" \
+            curl -X POST "$LOGIN_URL" \\
+                -d "userId=$USERNAME" \\
+                -d "password=$PASSWORD" \\
+                -d "serviceName=ProntoAuthentication" \\
                 -s -o /dev/null
         } && echo "Connected successfully!" || echo "Failed to connect. Please check your credentials or network."
 
         # Show the cursor again
         tput cnorm
         '''
-        # Write the shell script
+
+        # Write the shell script to the specified path
         with open(self.script_path, 'w') as f:
             f.write(script_content)
-        
-        # Make it executable
+
+        # Make the script executable
         os.chmod(self.script_path, os.stat(self.script_path).st_mode | stat.S_IXUSR | stat.S_IXGRP)
 
     def _create_startup_entry(self):
