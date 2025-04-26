@@ -181,11 +181,9 @@ class StartupGenerator:
             which is handled by the startup configuration process.
         """
         script_content = '''
-            # WiFi Auto Connect Script
-            $ErrorActionPreference = "Stop"
-            [Console]::CursorVisible = $false
+           [Console]::CursorVisible = $false
 
-            # Load credentials from file
+            # Load credentials from JSON file
             $credentialsFile = Join-Path -Path $HOME -ChildPath ".wifi_auto_login/credentials.json"
             try {
                 $credentials = Get-Content -Path $credentialsFile -Raw | ConvertFrom-Json
@@ -197,8 +195,8 @@ class StartupGenerator:
                 exit 1
             }
 
-            # Set Captive Portal Login URL
-            $LOGIN_URL = "$LOGIN_URL = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://detectportal.firefox.com/canonical.html"
+            # Captive Portal Login URL
+            $LOGIN_URL = "http://phc.prontonetworks.com/cgi-bin/authlogin?URI=http://detectportal.firefox.com/canonical.html"
 
             # Get connected SSID
             function Get-ConnectedSSID {
@@ -245,7 +243,6 @@ class StartupGenerator:
                         "password"    = $PASSWORD
                         "serviceName" = "ProntoAuthentication"
                     } -UseBasicParsing -TimeoutSec 10 | Out-Null
-
                     Write-Host "`nConnected successfully without browser pop-up!"
                 } catch {
                     Write-Host "Login failed. Please check your credentials or network."
@@ -254,12 +251,11 @@ class StartupGenerator:
                 Write-Host "Already connected. No captive portal detected."
             }
 
-            Write-Host "Connection setup complete. Stabilizing..."
-            Start-Sleep -Seconds 90  # Hold script alive for 90 seconds after login to stabilize
-
             [Console]::CursorVisible = $true
+            exit 0
+
             '''
-            
+              
             # Write the PowerShell script
         with open(self.script_path, 'w') as f:
             f.write(script_content)
