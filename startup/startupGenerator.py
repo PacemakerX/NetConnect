@@ -233,6 +233,9 @@ class StartupGenerator:
             # Main
             if (-not (Connect-ToWiFi)) {
                 Write-Host "Could not verify Wi-Fi connection. Proceeding anyway..."
+            } else {
+                Write-Host "Connected to Wi-Fi. Waiting for network stabilization..."
+                Start-Sleep -Seconds 6  
             }
 
             if (NeedsLogin) {
