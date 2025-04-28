@@ -12,17 +12,15 @@
 [![VS Code](https://custom-icon-badges.demolab.com/badge/VS%20Code-0078d7.svg?logo=visualstudiocode&logoColor=white)](#)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](#)
 
-
-
 ## 🚀 Features
 
--  **Auto WiFi Connection**: Automatically connects to known WiFi networks across Linux, Windows, and macOS.
--  **Captive Portal Handling**: Detects and logs into captive portals using saved credentials.
--  **Modular & OOP Structure**: Clean, extendable codebase using object-oriented principles.
--  **Cross-Platform CLI**: Lightweight, interactive CLI interface with OS-specific handling.
--  **Credential Management**: Securely store and manage login credentials for networks.
--  **Startup Automation**: Automatically run NetConnect at system boot.
--  **Config Persistence**: Stores settings and credentials in JSON format for reuse.
+- **Auto WiFi Connection**: Automatically connects to known WiFi networks across Linux, Windows, and macOS.
+- **Captive Portal Handling**: Detects and logs into captive portals using saved credentials.
+- **Modular & OOP Structure**: Clean, extendable codebase using object-oriented principles.
+- **Cross-Platform CLI**: Lightweight, interactive CLI interface with OS-specific handling.
+- **Credential Management**: Securely store and manage login credentials for networks.
+- **Startup Automation**: Automatically run NetConnect at system boot.
+- **Config Persistence**: Stores settings and credentials in JSON format for reuse.
 
 ## 🛠️ Tech Stack
 
@@ -48,21 +46,12 @@ Connecting to campus WiFi — especially one with captive portals — can be a r
 - Offers a clean, secure, and interactive CLI-based solution.
 - Empowers students with a modular and extendable tool that just works.
 
-## 📋 Installation & Working
+## Installation
 
-### Prerequisites
-Before running the project, ensure that the following software is installed:
-
-- **Python 3.7+**: Required for running the automation script.
-
-```bash
-# Clone the repository
-git clone https://github.com/PacemakerX/NetConnect.git
-
-cd NetConnect
-
-python main.py
-```
+[<img src="https://github.com/machiav3lli/oandbackupx/blob/034b226cea5c1b30eb4f6a6f313e4dadcbb0ece4/badge_github.png"
+alt="Get it on GitHub"
+height="80"
+align="center">](https://github.com/PacemakerX/NetConnect/releases/latest)
 
 ## Link to the Repository:
 
